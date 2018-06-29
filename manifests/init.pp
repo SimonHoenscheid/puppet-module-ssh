@@ -99,7 +99,7 @@ class ssh (
   $sshd_gssapistrictacceptorcheck           = undef,
   $sshd_gssapistorecredentialsonrekey       = undef,
   $sshd_gssapikexalgorithms                 = undef,
-  $sshd_acceptenv                           = 'USE_DEFAULTS',
+  $sshd_acceptenv                           = undef,
   $sshd_config_hostkey                      = 'USE_DEFAULTS',
   $sshd_listen_address                      = undef,
   $sshd_hostbasedauthentication             = 'no',
@@ -155,7 +155,6 @@ class ssh (
       $default_sshd_gssapikeyexchange          = undef
       $default_sshd_pamauthenticationviakbdint = undef
       $default_sshd_gssapicleanupcredentials   = 'yes'
-      $default_sshd_acceptenv                  = true
       $default_service_hasstatus               = true
       $default_sshd_config_serverkeybits       = '1024'
       $default_sshd_config_hostkey             = [ '/etc/ssh/ssh_host_rsa_key' ]
@@ -178,7 +177,6 @@ class ssh (
       $default_sshd_gssapikeyexchange          = undef
       $default_sshd_pamauthenticationviakbdint = undef
       $default_sshd_gssapicleanupcredentials   = 'yes'
-      $default_sshd_acceptenv                  = true
       $default_service_hasstatus               = true
       $default_sshd_config_serverkeybits       = '1024'
       $default_sshd_config_hostkey             = [ '/etc/ssh/ssh_host_rsa_key' ]
@@ -231,7 +229,6 @@ class ssh (
       $default_sshd_gssapikeyexchange          = undef
       $default_sshd_pamauthenticationviakbdint = undef
       $default_sshd_gssapicleanupcredentials   = 'yes'
-      $default_sshd_acceptenv                  = true
       $default_service_hasstatus               = true
       $default_sshd_config_serverkeybits       = '1024'
       $default_sshd_addressfamily              = 'any'
@@ -250,7 +247,6 @@ class ssh (
       $default_sshd_gssapikeyexchange          = 'yes'
       $default_sshd_pamauthenticationviakbdint = 'yes'
       $default_sshd_gssapicleanupcredentials   = undef
-      $default_sshd_acceptenv                  = false
       $default_sshd_config_serverkeybits       = '768'
       $default_ssh_package_adminfile           = undef
       $default_sshd_config_hostkey             = [ '/etc/ssh/ssh_host_rsa_key' ]
@@ -441,21 +437,8 @@ class ssh (
     }
   }
 
-  if $sshd_acceptenv == 'USE_DEFAULTS' {
-    $sshd_acceptenv_real = $default_sshd_acceptenv
-  } else {
-    case type3x($sshd_acceptenv) {
-      'string': {
-        validate_re($sshd_acceptenv, '^(true|false)$', "ssh::sshd_acceptenv may be either 'true' or 'false' and is set to <${sshd_acceptenv}>.")
-        $sshd_acceptenv_real = str2bool($sshd_acceptenv)
-      }
-      'boolean': {
-        $sshd_acceptenv_real = $sshd_acceptenv
-      }
-      default: {
-        fail('ssh::sshd_acceptenv type must be true or false.')
-      }
-    }
+  if $sshd_acceptenv != undef {
+    validate_array($sshd_acceptenv)
   }
 
   if $sshd_config_hostkey == 'USE_DEFAULTS' {

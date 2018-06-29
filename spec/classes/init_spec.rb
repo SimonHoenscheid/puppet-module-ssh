@@ -515,7 +515,6 @@ describe 'ssh' do
     it { should contain_file('sshd_config').with_content(/^GSSAPICleanupCredentials yes$/) }
     it { should_not contain_file('sshd_config').with_content(/^\s*PAMAuthenticationViaKBDInt yes$/) }
     it { should_not contain_file('sshd_config').with_content(/^\s*GSSAPIKeyExchange yes$/) }
-    it { should contain_file('sshd_config').with_content(/^AcceptEnv L.*$/) }
     it { should contain_file('sshd_config').with_content(/^AuthorizedKeysFile .ssh\/authorized_keys/) }
     it { should contain_file('sshd_config').with_content(/^HostKey \/etc\/ssh\/ssh_host_rsa_key/) }
     it { should contain_file('sshd_config').with_content(/^HostKey \/etc\/ssh\/ssh_host_dsa_key/) }
@@ -2068,6 +2067,7 @@ describe 'sshd_config_print_last_log param' do
     end
   end
 
+=begin
   describe 'with parameter sshd_acceptenv specified' do
     ['true',true].each do |value|
       context "as #{value}" do
@@ -2105,7 +2105,7 @@ describe 'sshd_config_print_last_log param' do
       end
     end
   end
-
+=end
   describe 'with parameter service_hasstatus' do
     ['true',true,'false',false].each do |value|
       context "specified as #{value}" do
